@@ -1,36 +1,9 @@
-import { Page, expect } from '@playwright/test'
-
+import { Page } from '@playwright/test'
 
 export class BasePage {
-  protected readonly page: Page;
+  constructor(protected readonly page: Page) {}
 
-  constructor(page: Page){
-    this.page = page
-  }
-
-  async loadWeb(url: string){
-    await this.page.goto(url)
-  }
-
-  async clickOn(selector: string){
-    await this.page.click(selector)
-  }
-
-  async fillField(selector: string, value: string){
-    await this.page.locator(selector).fill(value)
-  }
-
-  async expectVisible(selector: string){
-    await expect(this.page.locator(selector)).toBeVisible()
-  }
-
-  async selectOpt(selector: string, value: string){
-    await this.page.locator(selector).selectOption(value)
-  }
-
-  async selectOptList(selector: string,index: number, value: string){
-    const selects = this. page.locator(selector);
-    await selects.nth(index).click();
-    await this.page.getByRole('option', { name: value }).click();
+  async open(path: string) {
+    await this.page.goto(path)
   }
 }

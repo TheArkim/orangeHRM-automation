@@ -1,7 +1,7 @@
 import { test } from '@playwright/test'
 import { BasePage } from '../../pages/base.page'
 import { LoginPage } from '../../pages/login/login.page'
-import { AdminPage } from '../../pages/admin/admin.page';
+import { PIMPage } from '../../pages/pim/pim.page'
 import { env } from '../../config/env'
 
 
@@ -13,11 +13,12 @@ test.beforeEach(async ({page}) => {
   await login.login(env.username, env.password)
 })
 
-test('create user', async ({page}) => {
-  const admin = new AdminPage(page)
+test('create employee', async ({page}) => {
+  const pim = new PIMPage(page)
 
-  await admin.openCreateUserForm()
-  await admin.selectUserRole('Admin')
-  await admin.selectUserStatus('Enabled')
-  await admin.fillEmployeeName('HRM Tester User')
+  await pim.fillEmployeeData('HRM', 'Test', 'User', '1441')
+  await pim.createLoginDetails('HRMTest', 'HRMpassword1')
+  await pim.checkDataCreated('HRM User')
+
+  await pim.deleteUser('1441')
 })

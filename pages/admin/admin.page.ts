@@ -1,23 +1,38 @@
-import { BasePage } from "../base.page";
-import { adminLocators } from "../../locators/admin.locators";
-import { Page, Locator } from "@playwright/test";
+import { Locator, Page } from '@playwright/test'
+import { BasePage } from '../base.page'
 
 export class AdminPage extends BasePage {
-  private readonly adminOption
-  private readonly addButton
-  private readonly userRole
+  private readonly adminOption: Locator
+  private readonly addButton: Locator
+  private readonly userRole: Locator
+  private readonly status: Locator
+  private readonly employeeName: Locator
 
   constructor(page: Page) {
     super(page)
-    this.adminOption = page.locator(adminLocators.adminOption)
-    this.addButton = page.locator(adminLocators.addButton)
-    this.userRole = page.locator(adminLocators.userRole)
+    this.adminOption = page.getByRole('link', { name: 'Admin', exact: true })
+    this.addButton = page.getByRole('button', { name: 'Add' })
+    this.userRole = page.locator('.oxd-select-text').nth(0)
+    this.status = page.locator('.oxd-select-text').nth(1)
+    this.employeeName = page.getByPlaceholder('Type for hints...')
   }
 
-  async createUser(){
-    await this.clickOn(adminLocators.adminOption)
-    await this.clickOn(adminLocators.addButton)
-    await this.selectOptList(adminLocators.userRole, 0, 'Admin')
-    await this.selectOptList(adminLocators.userRole, 1, 'Enabled')
+  async openCreateUserForm() {
+    await this.adminOption.click()
+    await this.addButton.click()
+  }
+
+  async selectUserRole(role: string) {
+    await this.userRole.click()
+    await this.page.getByRole('option', { name: role, exact: true }).click()
+  }
+
+  async selectUserStatus(status: string) {
+    await this.status.click()
+    await this.page.getByRole('option', { name: status, exact: true }).click()
+  }
+
+  async fillEmployeeName(name: string) {
+    await this.employeeName.fill(name)
   }
 }
